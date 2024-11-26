@@ -1,3 +1,4 @@
+import { useSystemStore } from '@/stores/modules/system'
 import { TOKEN } from '@/constants'
 import axios from 'axios'
 import { getAccessToken, getRefreshToken, goToLoginPage } from '@/utils'
@@ -54,7 +55,12 @@ axiosInstance.interceptors.response.use(
     return response.data
   },
   (error) => {
-    console.log(`↪️ ~ error:`, error)
+    const systemStore = useSystemStore()
+    systemStore.showNotification({
+      type: 'error',
+      title: 'Error',
+      message: error?.response?.data?.message || 'Have an error occurred!'
+    })
     goToLoginPage()
     return Promise.reject(error)
   }

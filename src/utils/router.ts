@@ -1,19 +1,17 @@
-import { isAllEmpty } from '@/utils/common'
-import type { RouteRecordRaw } from 'vue-router'
+import { constantRoutes } from '@/router'
+import { type RouteRecordRaw } from 'vue-router'
 
 function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
-  console.log(routesList)
-
   if (routesList.length === 0) return routesList
   const newRoutesList: RouteRecordRaw[] = []
   routesList.forEach((v: RouteRecordRaw) => {
     if (v.path === '/') {
       newRoutesList.push({
-        component: v.component,
-        name: v.name,
-        path: v.path,
-        redirect: v.redirect,
-        meta: v.meta,
+        component: v?.component,
+        name: v?.name,
+        path: v?.path,
+        redirect: v?.redirect,
+        meta: v?.meta || {},
         children: []
       })
     } else {
@@ -21,24 +19,6 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
     }
   })
   return newRoutesList
-}
-
-function handRank(routeInfo: any) {
-  const { name, path, parentId, meta } = routeInfo
-  return isAllEmpty(parentId)
-    ? isAllEmpty(meta?.rank) || (meta?.rank === 0 && name !== 'Home' && path !== '/')
-      ? true
-      : false
-    : false
-}
-
-function ascending(arr: any[]) {
-  arr.forEach((v, index) => {
-    if (handRank(v)) v.meta.rank = index + 2
-  })
-  return arr.sort((a: { meta: { rank: number } }, b: { meta: { rank: number } }) => {
-    return a?.meta?.rank - b?.meta?.rank
-  })
 }
 
 function formatFlatteningRoutes(routesList: RouteRecordRaw[]) {
@@ -54,7 +34,7 @@ function formatFlatteningRoutes(routesList: RouteRecordRaw[]) {
   return hierarchyList
 }
 
-const buildHierarchyTree = (tree: any[], pathList = []): any => {
+function buildHierarchyTree(tree: any[], pathList = []): any {
   if (!Array.isArray(tree)) {
     console.warn('tree must be an array')
     return []
@@ -72,4 +52,13 @@ const buildHierarchyTree = (tree: any[], pathList = []): any => {
   return tree
 }
 
-export { formatTwoStageRoutes, formatFlatteningRoutes, ascending, buildHierarchyTree }
+function getBreadcrumbList(route: any) {
+  const allRoutes = [...constantRoutes, ...(constantRoutes[0].children || [])]
+  const { path: currentPath } = route.matched[route.matched.length - 1]
+  const listRouteMatched = allRoutes
+    .filter((v) => currentPath.startsWith(v.path))
+    .sort((a, b) => a.path.length - b.path.length)
+  return listRouteMatched
+}
+
+export { formatTwoStageRoutes, formatFlatteningRoutes, buildHierarchyTree, getBreadcrumbList }

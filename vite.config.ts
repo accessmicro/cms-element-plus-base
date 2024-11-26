@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    vueDevTools(),
+    vueDevTools()
     // for element ui
     // AutoImport({
     //   resolvers: [ElementPlusResolver()]
@@ -30,7 +30,10 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler' // or "modern"
+        api: 'modern-compiler', // or "modern"
+        additionalData: `
+          @use '@/assets/styles/variables.scss' as *;
+        `
       }
     }
   },

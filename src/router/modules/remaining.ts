@@ -4,10 +4,12 @@ const route: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    meta: {
-      rank: 103
-    },
-    component: () => import('@/views/login/index.vue'),
+    component: () => import('@/views/login/index.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not_found',
+    component: () => import('@/views/not-found/index.vue')
   }
 ]
 

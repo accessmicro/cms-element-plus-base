@@ -1,10 +1,5 @@
 import { createRouter, createWebHistory, type Router, type RouteRecordRaw } from 'vue-router'
-import {
-  buildHierarchyTree,
-  ascending,
-  formatFlatteningRoutes,
-  formatTwoStageRoutes
-} from '@/utils'
+import { buildHierarchyTree, formatFlatteningRoutes, formatTwoStageRoutes } from '@/utils'
 import remainingRouter from './modules/remaining'
 
 const modules: Record<string, any> = import.meta.glob(
@@ -14,14 +9,14 @@ const modules: Record<string, any> = import.meta.glob(
   }
 )
 
-const routes = <any>[]
+const routes: any[] = []
 
 Object.keys(modules).forEach((key) => {
   routes.push(modules[key].default)
 })
 
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
-  formatFlatteningRoutes(buildHierarchyTree(ascending(routes.flat(Infinity))))
+  formatFlatteningRoutes(buildHierarchyTree(routes.flat(Infinity)))
 )
 
 export const router: Router = createRouter({

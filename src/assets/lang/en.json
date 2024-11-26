@@ -1,0 +1,21 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "saveInfo": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm"
+  },
+  "hello": "Hello",
+  "thanks": "Thank you",
+  "select_datetime": "Select date and time",
+  "collapse": "Collapse",
+  "expand": "Expand",
+  "title": {
+    "home": "Home",
+    "cv": {
+      "list": "CV List",
+      "detail": "Detail"
+    }
+  }
+}
