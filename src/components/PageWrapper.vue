@@ -18,7 +18,7 @@
         class="m-3 mx-0 mb-0 overflow-hidden"
         :style="getContentStyle"
       >
-        <slot />
+        <slot :minHeight="contentHeight"/>
       </div>
     </div>
   </div>

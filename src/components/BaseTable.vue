@@ -1,5 +1,5 @@
 <template> 
-    <div class="table-container bg-white rounded-lg p-4 h-full w-full">
+    <div class="table-container bg-white rounded-lg p-4 px-0 h-full w-full">
       <div class="action-buttons" v-if="hasPagination">
           <div class="action-buttons__left">
               <el-select @change="handlePageSizeChange()" class="dropdown-select__pagesize" v-model="pageSize" placeholder="Select">
@@ -21,7 +21,7 @@
               <slot name="action-buttons"></slot>
           </div>
       </div>
-      <el-table   
+      <ElTable   
             v-bind="$attrs"
             :data="dataTable"
             :default-sort="defaultSort"
@@ -54,25 +54,37 @@
                     <slot :name="column.prop" :scope="scope">{{ scope.row[column.prop] }}</slot>
                 </template>
             </el-table-column>
-      </el-table>
+      </ElTable>
       <div class="pagination-wrapper" v-if="hasPagination">
           <el-pagination
               :current-page="currentPage"
               :page-size="pageSize"
               :total="totalItems"
               @current-change="handleCurrentPageChange"
+              background
               layout="prev, pager, next"
-              prev-text="Previous"
-              next-text="Next"
           />
       </div>
     </div>
 </template>
 <script setup lang="ts">
-import { DefaultTableCurentPageSize, DefaultTableCurrentPage, DefaultTablePageSizeOptions, SortOrder, UrlQueryVariables } from '@/constants';
 import type { TableColumnInstance, TableInstance , ElTable } from 'element-plus';
 import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+const DefaultTableCurentPageSize = 10;
+const DefaultTableCurrentPage = 1;
+const DefaultTablePageSizeOptions = [10, 20, 50, 100];
+const SortOrder = {
+  ascending: 'asc',
+  descending: 'desc'
+}
+const UrlQueryVariables = {
+  currentPage: 'page',
+  pageSize: 'pageSize',
+  sortBy: 'sortBy',
+  sortOrder: 'sortOrder'
+}
 
 const emit = defineEmits(['pageSizeChange', 'currentPageChange', 'selectionChange', 'sortChange', 'onChange'])
 type Nullable<T> = T | null
@@ -97,7 +109,7 @@ function isValidPaginableParam (param: Nullable<string>) {
   if(!param || isNaN(+param)) {
     return false
   }
-  return _.gt(+param, 0) // is positive value?
+  // return _.gt(+param, 0) // is positive value?
 }
 
 function convertPaginableParam (param: Nullable<string>) {
@@ -158,7 +170,7 @@ const handleUpdateQuery = () => {
   router.push({
     query: {
       ...query, [UrlQueryVariables.currentPage]: currentPage.value, [UrlQueryVariables.pageSize]: pageSize.value,
-      [UrlQueryVariables.sortBy]: columnId.value||"", [UrlQueryVariables.sortOrder]: SortOrder[currentSortOrder.value||""] || ''
+      [UrlQueryVariables.sortBy]: columnId.value||"", [UrlQueryVariables.sortOrder]: (SortOrder as any)[currentSortOrder.value||""] || ''
     }
   })
 }
